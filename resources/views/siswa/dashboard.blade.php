@@ -13,7 +13,7 @@
         .text-navy { color: #061a35; }
     </style>
 </head>
-<body class="font-sans antialiased h-screen flex flex-col bg-[#f4f6f9]">
+<body class="font-sans antialiased h-screen flex flex-col bg-[#f4f6f9]" x-data="{ sidebarOpen: false }">
 
 
 
@@ -21,9 +21,13 @@
     <div class="flex-1 flex flex-col relative" style="min-height:0">
         
         <!-- Top Navy Bar (Full Width) -->
-        <div class="bg-navy h-20 flex items-center justify-between px-6 z-30 shadow-md">
-            <!-- Left Profile -->
-            <div class="flex items-center gap-4">
+        <div class="bg-navy h-20 flex items-center justify-between px-4 md:px-6 z-30 shadow-md">
+            <!-- Left Profile & Hamburger -->
+            <div class="flex items-center gap-3 md:gap-4">
+                <!-- Hamburger Menu (Mobile) -->
+                <button @click="sidebarOpen = !sidebarOpen" class="md:hidden text-white hover:text-slate-300 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
                 <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-inner">
                     <!-- Academic Cap Icon -->
                     <svg class="w-7 h-7 text-navy" fill="currentColor" viewBox="0 0 24 24">
@@ -31,7 +35,7 @@
                       <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
                     </svg>
                 </div>
-                <div class="text-white">
+                <div class="text-white hidden sm:block">
                     <h2 class="font-bold text-[17px] leading-tight">{{ $siswa->nama }}</h2>
                     <p class="text-[11px] text-slate-300 mt-0.5">{{ $siswa->kelas->nama_kelas }}</p>
                 </div>
@@ -52,8 +56,11 @@
         <!-- Lower Section (Sidebar + Main Content) -->
         <div class="flex relative" style="height:calc(100vh - 5rem);min-height:0">
             
+            <!-- Mobile Sidebar Overlay -->
+            <div x-show="sidebarOpen" @click="sidebarOpen = false" x-transition.opacity class="fixed inset-0 bg-black/50 z-30 md:hidden"></div>
+
             <!-- Left Navy Sidebar -->
-            <aside class="w-[220px] bg-navy h-full flex-shrink-0 flex flex-col z-20 shadow-xl">
+            <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="absolute md:relative w-[220px] bg-navy h-full flex-shrink-0 flex flex-col z-40 shadow-xl transition-transform duration-300 md:translate-x-0">
                 <nav class="flex-1 px-4 pt-4">
                     <a href="{{ route('siswa.dashboard') }}" class="flex items-center gap-3 px-2 py-2 border-b border-white/80 text-white hover:bg-white/5 transition">
                         <!-- 4 Squares Icon -->
@@ -69,34 +76,34 @@
             <main class="flex-1 relative" style="overflow-y:auto;min-height:0;background:url('{{ asset('image/sekolah1.jpg') }}') center/cover fixed no-repeat">
                 
                 <!-- Background Overlay -->
-                <div class="fixed inset-0 bg-white/10 backdrop-blur-[1px] z-0 pointer-events-none" style="left:220px;top:5rem"></div>
+                <div class="fixed inset-0 bg-white/10 backdrop-blur-[1px] z-0 pointer-events-none md:left-[220px] top-20"></div>
 
                 <!-- Cards & Content -->
-                <div class="relative z-10 px-8 py-8 max-w-6xl mx-auto flex flex-col">
+                <div class="relative z-10 px-4 py-6 md:px-8 md:py-8 max-w-6xl mx-auto flex flex-col">
                     
                     <!-- Student Info Banner -->
-                    <div class="bg-navy rounded-lg shadow-xl px-6 py-4 flex flex-wrap lg:flex-nowrap divide-x divide-white/20 text-white mb-6 border border-white/10">
-                        <div class="px-4 py-1 first:pl-0 flex-1">
+                    <div class="bg-navy rounded-lg shadow-xl px-4 py-4 md:px-6 md:py-4 flex flex-col md:flex-row md:flex-wrap lg:flex-nowrap md:divide-x md:divide-white/20 divide-y md:divide-y-0 divide-white/20 text-white mb-6 border border-white/10">
+                        <div class="px-2 py-2 md:px-4 md:py-1 md:first:pl-0 flex-1">
                             <p class="text-xs text-slate-300 mb-0.5">Nama</p>
                             <p class="text-[13px] font-medium">{{ $siswa->nama }}</p>
                         </div>
-                        <div class="px-4 py-1 flex-1">
+                        <div class="px-2 py-2 md:px-4 md:py-1 flex-1">
                             <p class="text-xs text-slate-300 mb-0.5">Kelas</p>
                             <p class="text-[13px] font-medium">{{ $siswa->kelas->nama_kelas }}</p>
                         </div>
-                        <div class="px-4 py-1 flex-1">
+                        <div class="px-2 py-2 md:px-4 md:py-1 flex-1">
                             <p class="text-xs text-slate-300 mb-0.5">NIS</p>
                             <p class="text-[13px] font-medium">{{ $siswa->nis }}</p>
                         </div>
-                        <div class="px-4 py-1 flex-1">
+                        <div class="px-2 py-2 md:px-4 md:py-1 flex-1">
                             <p class="text-xs text-slate-300 mb-0.5">NISN</p>
                             <p class="text-[13px] font-medium">{{ $siswa->nisn }}</p>
                         </div>
-                        <div class="px-4 py-1 flex-1">
+                        <div class="px-2 py-2 md:px-4 md:py-1 flex-1">
                             <p class="text-xs text-slate-300 mb-0.5">NO Tlpn.</p>
                             <p class="text-[13px] font-medium">{{ $siswa->no_telp }}</p>
                         </div>
-                        <div class="px-4 py-1 flex-1">
+                        <div class="px-2 py-2 md:px-4 md:py-1 flex-1">
                             <p class="text-xs text-slate-300 mb-0.5">Alamat</p>
                             <p class="text-[11px] leading-tight font-medium">{{ $siswa->alamat }}</p>
                         </div>
@@ -143,18 +150,18 @@
 
                         <div class="space-y-2">
                             @forelse($siswa->pembayaran->sortByDesc('tgl_bayar')->take(4) as $idx => $pembayaran)
-                            <div class="bg-navy rounded shadow-lg px-6 py-2.5 flex items-center justify-between text-white border border-white/10 hover:bg-navy/90 transition">
-                                <div class="flex items-center gap-4 w-1/3">
-                                    <span class="text-lg font-bold">{{ $idx + 1 }}.</span>
+                            <div class="bg-navy rounded shadow-lg p-4 md:px-6 md:py-2.5 flex flex-col md:flex-row md:items-center justify-between text-white border border-white/10 hover:bg-navy/90 transition gap-3 md:gap-0">
+                                <div class="flex items-center gap-4 md:w-1/3">
+                                    <span class="text-lg font-bold hidden md:inline">{{ $idx + 1 }}.</span>
                                     <div>
                                         <h4 class="font-bold text-[13px]">{{ $siswa->nama }}</h4>
                                         <p class="text-[11px] text-slate-300">{{ $siswa->kelas->nama_kelas }}</p>
                                     </div>
                                 </div>
-                                <div class="w-1/3 text-center">
+                                <div class="md:w-1/3 md:text-center text-left">
                                     <span class="text-lg font-bold tracking-wide">RP. {{ number_format($pembayaran->jumlah_bayar, 2, ',', '.') }}</span>
                                 </div>
-                                <div class="w-1/3 text-right">
+                                <div class="md:w-1/3 md:text-right text-left flex md:flex-col justify-between md:justify-start items-center md:items-end">
                                     <p class="text-[11px] text-slate-300">({{ \Carbon\Carbon::parse($pembayaran->tgl_bayar)->format('d/m/Y') }})</p>
                                     <p class="text-[11px] text-slate-400">TRX-{{ str_pad($pembayaran->id, 7, '0', STR_PAD_LEFT) }}</p>
                                 </div>

@@ -18,23 +18,27 @@
         .text-navy { color: #061a35; }
     </style>
 </head>
-<body class="font-sans antialiased h-screen flex flex-col bg-[#f4f6f9]">
+<body class="font-sans antialiased h-screen flex flex-col bg-[#f4f6f9]" x-data="{ sidebarOpen: false }">
 
 
     <!-- Main Wrapper -->
     <div class="flex-1 flex flex-col relative" style="min-height:0">
         
         <!-- Top Navy Bar (Full Width) -->
-        <div class="relative bg-navy h-20 flex items-center justify-between px-6 z-30 shadow-md">
-            <!-- Left Profile -->
-            <div class="flex items-center gap-4">
+        <div class="relative bg-navy h-20 flex items-center justify-between px-4 md:px-6 z-30 shadow-md">
+            <!-- Left Profile & Hamburger -->
+            <div class="flex items-center gap-3 md:gap-4">
+                <!-- Hamburger Menu (Mobile) -->
+                <button @click="sidebarOpen = !sidebarOpen" class="md:hidden text-white hover:text-slate-300 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
                 <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-inner">
                     <!-- User Icon -->
                     <svg class="w-7 h-7 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                 </div>
-                <div class="text-white">
+                <div class="text-white hidden sm:block">
                     <h2 class="font-bold text-[17px] leading-tight">{{ auth()->user()->name }}</h2>
                     <p class="text-[11px] text-slate-300 mt-0.5">{{ ucfirst(auth()->user()->role) }}</p>
                 </div>
@@ -55,8 +59,11 @@
         <!-- Lower Section (Sidebar + Main Content) -->
         <div class="flex relative" style="height:calc(100vh - 5rem);min-height:0">
             
+            <!-- Mobile Sidebar Overlay -->
+            <div x-show="sidebarOpen" @click="sidebarOpen = false" x-transition.opacity class="fixed inset-0 bg-black/50 z-30 md:hidden"></div>
+
             <!-- Left Navy Sidebar -->
-            <aside class="relative w-[220px] bg-navy h-full flex-shrink-0 flex flex-col z-20 shadow-xl">
+            <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="absolute md:relative w-[220px] bg-navy h-full flex-shrink-0 flex flex-col z-40 shadow-xl transition-transform duration-300 md:translate-x-0">
                 <nav class="flex-1 px-4 pt-4 space-y-1">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-2 py-3 border-b border-white/20 text-white hover:bg-white/5 transition {{ request()->routeIs('dashboard') ? 'bg-white/10' : '' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,10 +115,10 @@
             <main class="flex-1 relative" style="overflow-y:auto;min-height:0;background:url('{{ asset('image/sekolah1.jpg') }}') center/cover fixed no-repeat">
                 
                 <!-- Background Overlay -->
-                <div class="fixed inset-0 bg-white/10 backdrop-blur-[1px] z-0 pointer-events-none" style="left:220px;top:5rem"></div>
+                <div class="fixed inset-0 bg-white/10 backdrop-blur-[1px] z-0 pointer-events-none md:left-[220px] top-20"></div>
 
                 <!-- Page Content -->
-                <div class="relative z-10 px-8 py-8 max-w-7xl mx-auto flex flex-col">
+                <div class="relative z-10 px-4 py-6 md:px-8 md:py-8 max-w-7xl mx-auto flex flex-col">
                     
                     <!-- Flash Messages -->
                     @if(session('success'))
