@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PembayaranController extends Controller
 {
-    /**
-     * Display the payment entry module.
-     */
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -33,10 +30,6 @@ class PembayaranController extends Controller
         return view('admin.pembayaran.index', compact('pembayaran', 'search'));
     }
 
-    /**
-     * Show the form for creating a new payment.
-     * Step-based flow: Pilih Kelas -> Pilih Siswa -> Form Pembayaran
-     */
     public function create(Request $request)
     {
         $kelasList = Kelas::withCount('siswa')->orderBy('nama_kelas')->get();
@@ -46,9 +39,6 @@ class PembayaranController extends Controller
         return view('admin.pembayaran.create', compact('kelasList', 'sppList', 'bulanList'));
     }
 
-    /**
-     * Store a newly created payment.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -61,21 +51,18 @@ class PembayaranController extends Controller
 
         $siswa = Siswa::with('spp')->where('nisn', $validated['nisn'])->first();
 
-        // Security Check 1: Prevent SPP manipulation
         if ($validated['id_spp'] != $siswa->id_spp) {
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Tarif SPP tidak sesuai dengan data siswa!');
         }
 
-        // Security Check 2: Prevent partial/manipulated payments
         if ($validated['jumlah_bayar'] < $siswa->spp->nominal) {
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Jumlah bayar tidak boleh kurang dari tarif SPP (Rp ' . number_format($siswa->spp->nominal, 0, ',', '.') . ')!');
         }
 
-        // Check for duplicate payment
         $exists = Pembayaran::where('nisn', $validated['nisn'])
             ->where('bulan_bayar', $validated['bulan_bayar'])
             ->where('tahun_bayar', $validated['tahun_bayar'])
@@ -96,9 +83,6 @@ class PembayaranController extends Controller
             ->with('success', 'Pembayaran berhasil dicatat!');
     }
 
-    /**
-     * Display the specified payment details.
-     */
     public function show(Pembayaran $pembayaran)
     {
         $pembayaran->load(['siswa.kelas', 'petugas', 'spp']);
@@ -106,12 +90,8 @@ class PembayaranController extends Controller
         return view('admin.pembayaran.show', compact('pembayaran'));
     }
 
-    /**
-     * Remove the specified payment.
-     */
     public function destroy(Pembayaran $pembayaran)
     {
-        // Security Check 3: Only Admin can delete payments
         if (!auth()->user()->isAdmin()) {
             abort(403, 'Akses ditolak! Hanya Admin yang dapat menghapus data pembayaran.');
         }
@@ -122,9 +102,6 @@ class PembayaranController extends Controller
             ->with('success', 'Data pembayaran berhasil dihapus!');
     }
 
-    /**
-     * Get students by class for AJAX request.
-     */
     public function getSiswaByKelas(Request $request)
     {
         $siswaList = Siswa::with(['kelas', 'spp'])
@@ -135,9 +112,6 @@ class PembayaranController extends Controller
         return response()->json(['siswa' => $siswaList]);
     }
 
-    /**
-     * Get student data for AJAX request.
-     */
     public function getSiswaData(Request $request)
     {
         $siswa = Siswa::with(['kelas', 'spp'])
