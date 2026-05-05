@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 100px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+}
+
+@layer components {
+    /* Smooth transitions for all interactive elements */
+    a, button, input, select, textarea {
+        @apply transition-all duration-200;
+    }
+}
+
+/* ===== Page Transition Animations ===== */
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 12px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+body {
+    animation: pageEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+body.page-leaving {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
