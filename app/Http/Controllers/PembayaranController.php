@@ -59,6 +59,22 @@ class PembayaranController extends Controller
             'jumlah_bayar' => 'required|integer|min:1',
         ]);
 
+        $siswa = Siswa::with('spp')->where('nisn', $validated['nisn'])->first();
+
+        // Security Check 1: Prevent SPP manipulation
+        if ($validated['id_spp'] != $siswa->id_spp) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Tarif SPP tidak sesuai dengan data siswa!');
+        }
+
+        // Security Check 2: Prevent partial/manipulated payments
+        if ($validated['jumlah_bayar'] < $siswa->spp->nominal) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Jumlah bayar tidak boleh kurang dari tarif SPP (Rp ' . number_format($siswa->spp->nominal, 0, ',', '.') . ')!');
+        }
+
         // Check for duplicate payment
         $exists = Pembayaran::where('nisn', $validated['nisn'])
             ->where('bulan_bayar', $validated['bulan_bayar'])
@@ -95,6 +111,11 @@ class PembayaranController extends Controller
      */
     public function destroy(Pembayaran $pembayaran)
     {
+        // Security Check 3: Only Admin can delete payments
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Akses ditolak! Hanya Admin yang dapat menghapus data pembayaran.');
+        }
+
         $pembayaran->delete();
 
         return redirect()->route('pembayaran.index')
