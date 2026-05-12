@@ -10,6 +10,11 @@
 Aplikasi ini didesain dengan antarmuka pengguna (UI) yang modern, responsif, dan dinamis, serta mengutamakan pengalaman pengguna (UX) yang optimal melalui penggunaan animasi transisi, layout yang terstruktur, dan fitur *wizard* interaktif. 
 
 **DEMO: https://syahfalah.pplg1.my.id**
+User Login:
+1. Siswa (nisn *12345*)
+2. Petugas (username *petugas*)
+3. Administrator (username *admin*)
+**User Password: password**
 
 ---
 
