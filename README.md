@@ -7,7 +7,9 @@
 
 **SPP Bersama** adalah sebuah aplikasi berbasis web yang dibangun untuk memudahkan pihak sekolah (Admin & Petugas) dalam mengelola dan mencatat data pembayaran Sumbangan Pembinaan Pendidikan (SPP) siswa. Aplikasi ini juga memberikan transparansi kepada Siswa untuk memantau status pembayaran mereka secara *real-time*.
 
-Aplikasi ini didesain dengan antarmuka pengguna (UI) yang modern, responsif, dan dinamis, serta mengutamakan pengalaman pengguna (UX) yang optimal melalui penggunaan animasi transisi, layout yang terstruktur, dan fitur *wizard* interaktif.
+Aplikasi ini didesain dengan antarmuka pengguna (UI) yang modern, responsif, dan dinamis, serta mengutamakan pengalaman pengguna (UX) yang optimal melalui penggunaan animasi transisi, layout yang terstruktur, dan fitur *wizard* interaktif. 
+
+**DEMO: https://syahfalah.pplg1.my.id**
 
 ---
 
